@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>개연_자격 임시 충족</title>
+    <style>
+        body{
+             background-color: #fce4ec; /* 연분홍 배경 */
+        }
+        body div{
+            font-family: Arial, sans-serif;
+            max-width: 1000px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fce4ec; /* 연분홍 배경 */
+            border-radius: 8px;
+            box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #d81b60; /* 진한 핑크 */
+        }
+        h2 {
+            text-align: center;
+            color: #d81b60; /* 진한 핑크 */
+        }
+        h3 {
+            text-align: center;
+            color: #d81b60;
+        }
+        h4 {
+            text-align: center;
+            color: #d81b60;
+        }
+        p {
+            background-color: #fff3e0; /* 베이지 톤 */
+            padding: 10px;
+            border-radius: 5px;
+            line-height: 1.6;
+            color:#f48fb1;
+            text-align: center;
+        }
+        a {
+            color: #880e4f; /* 자주 */
+            text-decoration: none;
+            font-weight: bold;
+        }
+        strong{
+            color:#880e4f;
+        }
+        .box {
+            background-color: #fff3e0; /* 베이지 톤 */
+            padding: 10px;
+            border-radius: 5px;
+            line-height: 1.6;
+            color:#f48fb1;
+            text-align: center;
+        }
+
+        .inline-container {
+            display: flex;
+            flex-direction: row; /* 가로 배치 명시 */
+            justify-content: center;
+            gap: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>개연</h1>
+
+    <div>
+    <h2>"자격 임시 충족"</h2>
+    <p><strong>견주로써 최소한의 조건을 갖췄을 수도 있습니다.<br>
+    반려견을 위해 더 많은 공부가 필요합니다.<br>
+    입양을 원한다면 전문가와 상의해보세요.</strong> </p>
+
+    <br>
+
+<h3>유기견 보호소 찾기</h3>
+<div style="text-align: center; margin-bottom: 30px;">
+    <iframe 
+        src="https://www.animal.go.kr/front/awtis/vworld/vworldMap.do?menuNo=5000000027"
+        width="90%" height="500px" style="border:2px solid #f48fb1; border-radius:10px;">
+    </iframe>
+</div>
+
+<!-- 토글 버튼 1 -->
+<p style="text-align: center;">
+    <button onclick="toggleIframe('link1')">동물 입양 지원</button>
+</p>
+<div id="link1" style="display: none; text-align: center; margin-bottom: 30px;">
+    <iframe 
+        src="https://www.gov.kr/portal/service/serviceInfo/154300000389"
+        width="90%" height="500px" style="border:2px solid #90caf9; border-radius:10px;">
+    </iframe>
+</div>
+
+<!-- 토글 버튼 2 -->
+<p style="text-align: center;">
+    <button onclick="toggleIframe('link2')">반려동물 보험금 예측</button>
+</p>
+<div id="link2" style="display: none; text-align: center;">
+    <iframe 
+        src="https://store.meritzfire.com/pet/main.do#!/"
+        width="90%" height="500px" style="border:2px solid #ce93d8; border-radius:10px;">
+    </iframe>
+</div>
+
+<!-- 공통 스크립트 -->
+<script>
+    function toggleIframe(id) {
+        const target = document.getElementById(id);
+        target.style.display = (target.style.display === 'none') ? 'block' : 'none';
+    }
+</script>
+</body>
+</html>

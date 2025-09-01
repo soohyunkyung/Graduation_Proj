@@ -1,0 +1,15 @@
+# .gitignore
+
+# Python
+__pycache__/
+*.pyc
+
+# Django
+*.log
+*.pot
+*.sqlite3
+db.sqlite3
+media/
+
+# Virtualenv
+venv/

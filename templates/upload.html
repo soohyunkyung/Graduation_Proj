@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>개연_시작 페이지</title>
+    <style>
+        body{
+             background-color: #fce4ec; /* 연분홍 배경 */
+        }
+        body div{
+            font-family: Arial, sans-serif;
+            max-width: 900px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fce4ec; /* 연분홍 배경 */
+            border: 1px solid #f8bbd0;
+            border-radius: 8px;
+            box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #d81b60; /* 진한 핑크 */
+        }
+
+        h2 {
+            text-align: center;
+            color: #d81b60; /* 진한 핑크 */
+        }
+
+        hr{
+            color: #d81b60; /* 진한 핑크 */
+        }
+
+        .input-section {
+            margin-bottom: 15px;
+        }
+        label {
+            font-weight: bold;
+            color: #880e4f; /* 진한 자주 */
+        }
+        input[type="text"], input[type="file"] {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #f8bbd0;
+            border-radius: 4px;
+            background-color: #fff3e0; /* 베이지 톤 */
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            background-color: #f48fb1; /* 연한 핑크 */
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        button:hover {
+            background-color: #d81b60; /* 진한 핑크 */
+        }
+        .result {
+            margin-top: 15px;
+            font-weight: bold;
+            text-align: center;
+            color: #880e4f;
+        }
+        .breed-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 6px;
+    margin-top: 10px;
+}
+
+.breed-grid button {
+    padding: 6px 8px;
+    font-size: 12px;
+    background-color: #fce4ec;
+    border: 1px solid #f8bbd0;
+    border-radius: 4px;
+    cursor: pointer;
+    color: #880e4f;
+    white-space: nowrap;
+}
+
+    </style>
+</head>
+<body>
+    <h1>개연</h1>
+    <div>
+    <h2>키우고 싶은 견종은?</h2>
+    <form id="infoForm" method = "post" enctype="multipart/form-data">
+        <div class="input-section">
+            <label for="fileInput">견종 이미지 업로드:</label>
+            <input type="file" id="fileInput" name="fileInput" accept="image/*">
+        </div>
+        <div class="input-section">
+            <label for="textInput">견종 입력:</label>
+            <input type="text" id="textInput" name="textInput" placeholder="견종을 입력하세요">
+        </div>
+        <div id="breedList" class="breed-grid"></div>
+
+        <button type="button" onclick="submitInfo()">다음 페이지</button>
+    </form>
+    <p id="result" class="result"></p>
+    </div>
+    <script>
+        function submitInfo() {
+            const formData = new FormData(document.getElementById('infoForm'));
+
+            fetch('http://127.0.0.1:8000/upload/', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    window.location.href = data.redirect;
+                } else {
+                    alert("에러: " + data.error);
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
+    </script>
+<script>
+    const breeds = [
+        'bostonbull', 'dingo', 'pekinese', 'bluetick', 'goldenretriever',
+        'bedlingtonterrier', 'borzoi', 'basenji', 'scottishdeerhound',
+        'shetlandsheepdog', 'walkerhound', 'maltesedog', 'norfolkterrier',
+        'africanhuntingdog', 'wire-hairedfoxterrier', 'redbone', 'lakelandterrier',
+        'boxer', 'doberman', 'otterhound', 'standardschnauzer', 'irishwaterspaniel',
+        'black-and-tancoonhound', 'cairn', 'affenpinscher', 'labradorretriever',
+        'ibizanhound', 'englishsetter', 'weimaraner', 'giantschnauzer', 'groenendael',
+        'dhole', 'toypoodle', 'borderterrier', 'tibetanterrier', 'norwegianelkhound',
+        'shih-tzu', 'irishterrier', 'kuvasz', 'germanshepherd',
+        'greaterswissmountaindog', 'basset', 'australianterrier', 'schipperke',
+        'rhodesianridgeback', 'irishsetter', 'appenzeller', 'bloodhound', 'samoyed',
+        'miniatureschnauzer', 'brittanyspaniel', 'kelpie', 'papillon', 'bordercollie',
+        'entlebucher', 'collie', 'malamute', 'welshspringerspaniel', 'chihuahua',
+        'saluki', 'pug', 'malinois', 'komondor', 'airedale', 'leonberg',
+        'mexicanhairless', 'bullmastiff', 'bernesemountaindog',
+        'americanstaffordshireterrier', 'lhasa', 'cardigan', 'italiangreyhound',
+        'clumber', 'scotchterrier', 'afghanhound', 'oldenglishsheepdog',
+        'saintbernard', 'miniaturepinscher', 'eskimodog', 'irishwolfhound',
+        'brabancongriffon', 'toyterrier', 'chow', 'flat-coatedretriever',
+        'norwichterrier', 'soft-coatedwheatenterrier', 'staffordshirebullterrier',
+        'englishfoxhound', 'gordonsetter', 'siberianhusky', 'newfoundland', 'briard',
+        'chesapeakebayretriever', 'dandiedinmont', 'greatpyrenees', 'beagle',
+        'vizsla', 'westhighlandwhiteterrier', 'kerryblueterrier', 'whippet',
+        'sealyhamterrier', 'standardpoodle', 'keeshond', 'japanesespaniel',
+        'miniaturepoodle', 'pomeranian', 'curly-coatedretriever', 'yorkshireterrier',
+        'pembroke', 'greatdane', 'blenheimspaniel', 'silkyterrier', 'sussexspaniel',
+        'germanshort-hairedpointer', 'frenchbulldog', 'bouvierdesflandres',
+        'tibetanmastiff', 'englishspringer', 'cockerspaniel', 'rottweiler'
+    ];
+
+    window.addEventListener("DOMContentLoaded", function () {
+        const listContainer = document.getElementById("breedList");
+        const inputField = document.getElementById("textInput");
+
+        breeds.forEach(breed => {
+            const btn = document.createElement("button");
+            btn.type = "button";
+            btn.textContent = breed;
+            btn.addEventListener("click", () => {
+                inputField.value = breed;
+            });
+            listContainer.appendChild(btn);
+        });
+    });
+</script>
+
+</body>
+</html>

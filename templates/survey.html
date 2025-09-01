@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+
+<html lang="ko">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>개연_설문조사 페이지</title>
+<style>
+    body { background-color: #fce4ec; }
+    .container {
+      font-family: Arial, sans-serif;
+      max-width: 1000px;
+      margin: 50px auto;
+      padding: 20px;
+      background-color: #fce4ec;
+      border: 1px solid #f8bbd0;
+      border-radius: 8px;
+      box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.1);
+    }
+    h1, h2, h3 {
+      text-align: center;
+      color: #d81b60;
+    }
+    .question {
+      margin-top: 20px;
+    }
+    .option {
+      display: block;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      margin: 5px 0;
+      cursor: pointer;
+      background-color: #fff3e0;
+      color: #f48fb1;
+      text-align: center;
+    }
+    label {
+      font-weight: bold;
+    }
+    button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 20px;
+      background-color: #f48fb1;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    button:hover {
+      background-color: #d81b60;
+    }
+  </style>
+</head>
+<body>
+<h1>개연</h1>
+<div class="container">
+<h2>선택한 견종과의 적합도를 알아보는 설문조사입니다.</h2>
+<p style="text-align: center; color: #880e4f;">모든 응답에 대하여 신중하게 응답해주세요.</p>
+<form action="/survey/" method="post">
+  {% csrf_token %}
+
+  {% if breed %}
+    <h2 style="text-align: center; color: #d81b60;">
+        선택된 견종: {{ breed }}
+    </h2>
+{% endif %}
+
+
+
+
+<div class="question">
+<h3>1. 성별</h3>
+<label class="option"><input checked="" name="q1" type="radio" value="여성"/> 여성</label>
+<label class="option"><input checked="" name="q1" type="radio" value="남성"/> 남성</label>
+</div>
+<div class="question">
+<h3>2. 연령대 (한국나이)</h3>
+<label class="option"><input checked="" name="q2" type="radio" value="20대 이하"/> 20대 이하</label>
+<label class="option"><input checked="" name="q2" type="radio" value="30대"/> 30대</label>
+<label class="option"><input checked="" name="q2" type="radio" value="40대"/> 40대</label>
+<label class="option"><input checked="" name="q2" type="radio" value="50대"/> 50대</label>
+<label class="option"><input checked="" name="q2" type="radio" value="60대 이상"/> 60대 이상</label>
+</div>
+<div class="question">
+<h3>3. 직업</h3>
+<label class="option"><input checked="" name="q3" type="radio" value="학생"/> 학생</label>
+<label class="option"><input checked="" name="q3" type="radio" value="취업 준비 중"/> 취업 준비 중</label>
+<label class="option"><input checked="" name="q3" type="radio" value="직장인"/> 직장인</label>
+<label class="option"><input checked="" name="q3" type="radio" value="자영업"/> 자영업</label>
+<label class="option"><input checked="" name="q3" type="radio" value="전업주부"/> 전업주부</label>
+<label class="option"><input checked="" name="q3" type="radio" value="기타"/> 기타</label>
+</div>
+<div class="question">
+<h3>4. 학력</h3>
+<label class="option"><input checked="" name="q4" type="radio" value="중학교 이하"/> 중학교 이하</label>
+<label class="option"><input checked="" name="q4" type="radio" value="고졸 이하"/> 고졸 이하</label>
+<label class="option"><input checked="" name="q4" type="radio" value="대졸 이하"/> 대졸 이하</label>
+<label class="option"><input checked="" name="q4" type="radio" value="대학원 이상"/> 대학원 이상</label>
+</div>
+<div class="question">
+<h3>5. 현재 거주 형태</h3>
+<label class="option"><input checked="" name="q5" type="radio" value="1인 가구"/> 1인 가구</label>
+<label class="option"><input checked="" name="q5" type="radio" value="부모와 함께 거주"/> 부모와 함께 거주</label>
+<label class="option"><input checked="" name="q5" type="radio" value="배우자/가족과 함께 거주"/> 배우자/가족과 함께 거주</label>
+<label class="option"><input checked="" name="q5" type="radio" value="공동생활"/> 공동생활</label>
+<label class="option"><input checked="" name="q5" type="radio" value="기타"/> 기타</label>
+</div>
+<div class="question">
+<h3>6. 가구원수</h3>
+<label class="option"><input checked="" name="q6" type="radio" value="1인"/> 1인</label>
+<label class="option"><input checked="" name="q6" type="radio" value="2인"/> 2인</label>
+<label class="option"><input checked="" name="q6" type="radio" value="3인"/> 3인</label>
+<label class="option"><input checked="" name="q6" type="radio" value="4인 이상"/> 4인 이상</label>
+</div>
+<div class="question">
+<h3>7. 지역 대분류</h3>
+<label class="option"><input checked="" name="q7" type="radio" value="서울"/> 서울</label>
+<label class="option"><input checked="" name="q7" type="radio" value="경기 / 인천 (수도권)"/> 경기 / 인천 (수도권)</label>
+<label class="option"><input checked="" name="q7" type="radio" value="강원"/> 강원</label>
+<label class="option"><input checked="" name="q7" type="radio" value="충청 (대전, 세종 포함)"/> 충청 (대전, 세종 포함)</label>
+<label class="option"><input checked="" name="q7" type="radio" value="전라"/> 전라</label>
+<label class="option"><input checked="" name="q7" type="radio" value="경상 (부산, 대구, 울산 포함)"/> 경상 (부산, 대구, 울산 포함)</label>
+<label class="option"><input checked="" name="q7" type="radio" value="제주"/> 제주</label>
+<label class="option"><input checked="" name="q7" type="radio" value="해외"/> 해외</label>
+</div>
+<div class="question">
+<h3>8. 강아지 키워본 경험 유무</h3>
+<label class="option"><input checked="" name="q8" type="radio" value="있음"/> 있음</label>
+<label class="option"><input checked="" name="q8" type="radio" value="없음"/> 없음</label>
+</div>
+<div class="question">
+<h3>9. 집에 반려동물이 있다면 어떤 종류의 반려동물이 있나요? (복수선택)</h3>
+<label class="option"><input checked="" name="q9" type="radio" value="강아지"/> 강아지</label>
+<label class="option"><input checked="" name="q9" type="radio" value="고양이"/> 고양이</label>
+<label class="option"><input checked="" name="q9" type="radio" value="조류"/> 조류</label>
+<label class="option"><input checked="" name="q9" type="radio" value="어류"/> 어류</label>
+<label class="option"><input checked="" name="q9" type="radio" value="기타"/> 기타</label>
+</div>
+<div class="question">
+<h3>10. 반려동물이 있다면 각각 몇마리가 있는지 적어주세요 (예시: 강아지 1마리 고양이 2마리)</h3>
+<input name="q10" style="width: 100%; padding: 8px; margin-top: 8px;" type="text"/>
+</div>
+<div class="question">
+<h3>11. 본인은 반려견을 키우기 위해 경제적으로 준비되었다고 느끼시나요?</h3>
+<label class="option"><input checked="" name="q11" type="radio" value="예"/> 예</label>
+<label class="option"><input checked="" name="q11" type="radio" value="아니요"/> 아니요</label>
+</div>
+<div class="question">
+<h3>12. 월 소득</h3>
+<label class="option"><input checked="" name="q12" type="radio" value="200만원 미만"/> 200만원 미만</label>
+<label class="option"><input checked="" name="q12" type="radio" value="200-400만원 미만"/> 200-400만원 미만</label>
+<label class="option"><input checked="" name="q12" type="radio" value="400-600만원 미만"/> 400-600만원 미만</label>
+<label class="option"><input checked="" name="q12" type="radio" value="600-800만원 미만"/> 600-800만원 미만</label>
+<label class="option"><input checked="" name="q12" type="radio" value="800만원 이상"/> 800만원 이상</label>
+</div>
+<div class="question">
+<h3>13. 반려동물을 위한 월 지출 가능 예산은 얼마인가요?</h3>
+<label class="option"><input checked="" name="q13" type="radio" value="5만원 미만"/> 5만원 미만</label>
+<label class="option"><input checked="" name="q13" type="radio" value="5만 ~ 10만원 미만"/> 5만 ~ 10만원 미만 </label>
+<label class="option"><input checked="" name="q13" type="radio" value="10만 ~ 20만원 미만"/> 10만 ~ 20만원 미만</label>
+<label class="option"><input checked="" name="q13" type="radio" value="20만 원 이상"/> 20만 원 이상</label>
+</div>
+<div class="question">
+<h3>14. 예상치 못한 의료비(수술/응급치료 등)이 발생할 경우 감당 가능한 최대 금액은?</h3>
+<label class="option"><input checked="" name="q14" type="radio" value="5만원 미만"/> 5만 원 미만 </label>
+<label class="option"><input checked="" name="q14" type="radio" value="5만 ~ 20만원 미만"/> 5만 ~ 20만원 미만</label>
+<label class="option"><input checked="" name="q14" type="radio" value="20만 ~ 50만원 미만"/> 20만 ~ 50만원 미만</label>
+<label class="option"><input checked="" name="q14" type="radio" value="50만 원 이상"/> 50만 원 이상</label>
+<label class="option"><input checked="" name="q14" type="radio" value="감당하기 어렵다"/> 감당하기 어렵다</label>
+</div>
+<div class="question">
+<h3>15. 최근 3개월 내 예상치 못한 큰 지출이 있었나요? 발생 시 어떻게 대응하셨나요?</h3>
+<label class="option"><input checked="" name="q15" type="radio" value="발생하지 않았다"/> 발생하지 않았다</label>
+<label class="option"><input checked="" name="q15" type="radio" value="있었지만 본인이 전액 감당했다"/> 있었지만 본인이 전액 감당했다</label>
+<label class="option"><input checked="" name="q15" type="radio" value="가족 등에게 일부 도움을 받았다"/> 가족 등에게 일부 도움을 받았다</label>
+<label class="option"><input checked="" name="q15" type="radio" value="대출 또는 외부 도움을 받았다"/> 대출 또는 외부 도움을 받았다</label>
+</div>
+<div class="question">
+<h3>16. 한 달 평균 여가비 지출 수준은?</h3>
+<label class="option"><input checked="" name="q16" type="radio" value="5만원 미만"/> 5만원 미만</label>
+<label class="option"><input checked="" name="q16" type="radio" value="5만 ~ 10만원 미만"/> 5만 ~ 10만원 미만</label>
+<label class="option"><input checked="" name="q16" type="radio" value="10만 ~ 20만원 미만"/> 10만 ~ 20만원 미만</label>
+<label class="option"><input checked="" name="q16" type="radio" value="20만원 이상"/> 20만원 이상</label>
+<label class="option"><input checked="" name="q16" type="radio" value="지출이 일정하지 않음"/> 지출이 일정하지 않음</label>
+</div>
+<div class="question">
+<h3>17. 반려동물 관련 지출 계획은?</h3>
+<label class="option"><input checked="" name="q17" type="radio" value="별도 예산 확보"/> 별도 예산 확보</label>
+<label class="option"><input checked="" name="q17" type="radio" value="필요시 지출"/> 필요시 지출</label>
+<label class="option"><input checked="" name="q17" type="radio" value="가족과 분담"/> 가족과 분담</label>
+<label class="option"><input checked="" name="q17" type="radio" value="아직 생각 안함"/> 아직 생각 안함</label>
+</div>
+<div class="question">
+<h3>18. 평소 고정 지출은?</h3>
+<label class="option"><input checked="" name="q18" type="radio" value="50만 원 미만"/> 50만 원 미만</label>
+<label class="option"><input checked="" name="q18" type="radio" value="50~100만 원"/> 50~100만 원</label>
+<label class="option"><input checked="" name="q18" type="radio" value="100~150만 원"/> 100~150만 원</label>
+<label class="option"><input checked="" name="q18" type="radio" value="150만 원 이상"/> 150만 원 이상</label>
+<label class="option"><input checked="" name="q18" type="radio" value="일정하지 않음"/> 일정하지 않음</label>
+</div>
+<div class="question">
+<h3>19. 급히 30만 원 이상 현금이 필요할 때 대처는?</h3>
+<label class="option"><input checked="" name="q19" type="radio" value="바로 가능"/> 바로 가능</label>
+<label class="option"><input checked="" name="q19" type="radio" value="일부 가능"/> 일부 가능</label>
+<label class="option"><input checked="" name="q19" type="radio" value="부모/지인 도움"/> 부모/지인 도움</label>
+<label class="option"><input checked="" name="q19" type="radio" value="감당 어렵다"/> 감당 어렵다</label>
+</div>
+<div class="question">
+<h3>20. 본인의 현재 주변환경은 반려견을 키우기에 적합한 환경이라고 생각하시나요?</h3>
+<label class="option"><input checked="" name="q20" type="radio" value="예"/> 예</label>
+<label class="option"><input checked="" name="q20" type="radio" value="아니요"/> 아니요</label>
+</div>
+<div class="question">
+<h3>21. 입양을 고민하신지는 얼마나 되셨나요?</h3>
+<label class="option"><input checked="" name="q21" type="radio" value="당일"/> 당일</label>
+<label class="option"><input checked="" name="q21" type="radio" value="1주일"/> 1주일</label>
+<label class="option"><input checked="" name="q21" type="radio" value="2-3주일"/> 2-3주일</label>
+<label class="option"><input checked="" name="q21" type="radio" value="1개월"/> 1개월</label>
+<label class="option"><input checked="" name="q21" type="radio" value="2-3 개월"/> 2-3 개월</label>
+<label class="option"><input checked="" name="q21" type="radio" value="4-5 개월"/> 4-5 개월</label>
+<label class="option"><input checked="" name="q21" type="radio" value="6개월 이상"/> 6개월 이상</label>
+</div>
+<div class="question">
+<h3>22. 반려견을 좋아하지 않는 가족 구성원이 있습니까?</h3>
+<label class="option"><input checked="" name="q22" type="radio" value="1명"/> 1명</label>
+<label class="option"><input checked="" name="q22" type="radio" value="2명"/> 2명</label>
+<label class="option"><input checked="" name="q22" type="radio" value="3명"/> 3명</label>
+<label class="option"><input checked="" name="q22" type="radio" value="4명"/> 4명</label>
+<label class="option"><input checked="" name="q22" type="radio" value="모두"/> 모두</label>
+<label class="option"><input checked="" name="q22" type="radio" value="없음"/> 없음</label>
+</div>
+<div class="question">
+<h3>23. 현재 거주 중인 집의 계약 조건 상 반려동물 양육은 가능한가요?</h3>
+<label class="option"><input checked="" name="q23" type="radio" value="가능하다"/> 가능하다</label>
+<label class="option"><input checked="" name="q23" type="radio" value="조건부로 가능하다 (크기/종 제한 등)"/> 조건부로 가능하다 (크기/종 제한 등)</label>
+<label class="option"><input checked="" name="q23" type="radio" value="불가능하다"/> 불가능하다</label>
+<label class="option"><input checked="" name="q23" type="radio" value="잘 모르겠다"/> 잘 모르겠다</label>
+</div>
+<div class="question">
+<h3>24. 이사, 취업, 유학 등의 생활 변화가 1년 내에 있을 가능성이 있나요?</h3>
+<label class="option"><input checked="" name="q24" type="radio" value="없음"/> 없음</label>
+<label class="option"><input checked="" name="q24" type="radio" value="1년 내 계획이 있다"/> 1년 내 계획이 있다</label>
+<label class="option"><input checked="" name="q24" type="radio" value="가능성은 있지만 미정"/> 가능성은 있지만 미정</label>
+<label class="option"><input checked="" name="q24" type="radio" value="이미 진행 중이다"/> 이미 진행 중이다</label>
+</div>
+<div class="question">
+<h3>25. 반려동물을 돌봐줄 수 있는 주변 인적 지원(가족, 친구, 펫시터 등)이 있나요?</h3>
+<label class="option"><input checked="" name="q25" type="radio" value="없다"/> 없다</label>
+<label class="option"><input checked="" name="q25" type="radio" value="1~2일 정도 돌봐줄 수 있는 사람은 있다"/> 1~2일 정도 돌봐줄 수 있는 사람은 있다</label>
+<label class="option"><input checked="" name="q25" type="radio" value="1주 이상 맡길 수 있는 사람이 있다"/> 1주 이상 맡길 수 있는 사람이 있다</label>
+<label class="option"><input checked="" name="q25" type="radio" value="유급 펫시터를 이용할 수 있다"/> 유급 펫시터를 이용할 수 있다</label>
+</div>
+<div class="question">
+<h3>26. 평일 기준, 반려견과 함께할 수 있는 시간은 하루 평균 몇 시간인가요?</h3>
+<label class="option"><input checked="" name="q26" type="radio" value="거의 함께할 수 없다"/> 거의 함께할 수 없다</label>
+<label class="option"><input checked="" name="q26" type="radio" value="1시간 내외"/> 1시간 내외</label>
+<label class="option"><input checked="" name="q26" type="radio" value="2~3시간"/> 2~3시간</label>
+<label class="option"><input checked="" name="q26" type="radio" value="4시간 이상"/> 4시간 이상</label>
+</div>
+<div class="question">
+<h3>27. 주말 기준, 반려견과 함께할 수 있는 시간은 하루 평균 몇 시간인가요?</h3>
+<label class="option"><input checked="" name="q27" type="radio" value="거의 함께할 수 없다"/> 거의 함께할 수 없다</label>
+<label class="option"><input checked="" name="q27" type="radio" value="1시간 내외"/> 1시간 내외</label>
+<label class="option"><input checked="" name="q27" type="radio" value="2~3시간"/> 2~3시간</label>
+<label class="option"><input checked="" name="q27" type="radio" value="4시간 이상"/> 4시간 이상</label>
+</div>
+<div class="question">
+<h3>28. 반려견의 산책을 주 몇 회 정도 계획하고 있나요?</h3>
+<label class="option"><input checked="" name="q28" type="radio" value="거의 하지 않을 것 같다"/> 거의 하지 않을 것 같다</label>
+<label class="option"><input checked="" name="q28" type="radio" value="주 1~4회"/> 주 1~4회</label>
+<label class="option"><input checked="" name="q28" type="radio" value="거의 매일 산책할 수 있다"/> 거의 매일 산책할 수 있다</label>
+</div>
+<div class="question">
+<h3>29. 갑작스러운 일정으로 돌봄이 어려울 경우 대처 계획은?</h3>
+<label class="option"><input checked="" name="q29" type="radio" value="생각해본 적 없다(불합)"/> 생각해본 적 없다(불합)</label>
+<label class="option"><input checked="" name="q29" type="radio" value="가족이나 지인의 도움"/> 가족이나 지인의 도움</label>
+<label class="option"><input checked="" name="q29" type="radio" value="유료 돌봄 서비스"/> 유료 돌봄 서비스</label>
+<label class="option"><input checked="" name="q29" type="radio" value="일정 조정으로 공백 없음"/> 일정 조정으로 공백 없음</label>
+</div>
+<div class="question">
+<h3>30. 평일 하루 중, 반려견과 함께할 수 있는 시간대는 언제인가요?</h3>
+<label class="option"><input checked="" name="q30" type="radio" value="아침 시간"/> 아침 시간</label>
+<label class="option"><input checked="" name="q30" type="radio" value="저녁 시간"/> 저녁 시간</label>
+<label class="option"><input checked="" name="q30" type="radio" value="늦은 밤 시간"/> 늦은 밤 시간</label>
+<label class="option"><input checked="" name="q30" type="radio" value="일정이 불규칙"/> 일정이 불규칙</label>
+</div>
+<div class="question">
+<h3>31. 하루 평균 여가 시간은 얼마나 되나요?</h3>
+<label class="option"><input checked="" name="q31" type="radio" value="1시간 이하(불합)"/> 1시간 이하(불합)</label>
+<label class="option"><input checked="" name="q31" type="radio" value="1~4시간"/> 1~4시간</label>
+<label class="option"><input checked="" name="q31" type="radio" value="5시간 이상"/> 5시간 이상</label>
+</div>
+<div class="question">
+<h3>32. 아플 때도 반려견을 돌볼 수 있나요?</h3>
+<label class="option"><input checked="" name="q32" type="radio" value="어려울 것 같다"/> 어려울 것 같다</label>
+<label class="option"><input checked="" name="q32" type="radio" value="기본적인 돌봄은 가능"/> 기본적인 돌봄은 가능</label>
+<label class="option"><input checked="" name="q32" type="radio" value="항상 돌볼 수 있다"/> 항상 돌볼 수 있다</label>
+</div>
+<div class="question">
+<h3>33. 당신이 아는 좋은 반려견 보호자의 특징은?</h3>
+<label class="option"><input checked="" name="q33" type="radio" value="산책을 자주함"/> 산책을 자주함</label>
+<label class="option"><input checked="" name="q33" type="radio" value="놀이/훈련 상호작용"/> 놀이/훈련 상호작용</label>
+<label class="option"><input checked="" name="q33" type="radio" value="건강관리 철저"/> 건강관리 철저</label>
+<label class="option"><input checked="" name="q33" type="radio" value="통제/훈련 잘함"/> 통제/훈련 잘함</label>
+<label class="option"><input checked="" name="q33" type="radio" value="기억 안남"/> 기억 안남</label>
+</div>
+<div class="question">
+<h3>34. 하루가 끝나고 본인의 에너지 상태는?</h3>
+<label class="option"><input checked="" name="q34" type="radio" value="활기참"/> 활기참</label>
+<label class="option"><input checked="" name="q34" type="radio" value="간단한 일만 가능"/> 간단한 일만 가능</label>
+<label class="option"><input checked="" name="q34" type="radio" value="바로 쉬어야 함"/> 바로 쉬어야 함</label>
+<label class="option"><input checked="" name="q34" type="radio" value="상황에 따라 다름"/> 상황에 따라 다름</label>
+</div>
+<div class="question">
+<h3>35. 당신의 평일 하루 일정은 얼마나 일정하거나 유동적이라고 느끼시나요?</h3>
+<label class="option"><input checked="" name="q35" type="radio" value="매우 일정하다"/> 매우 일정하다</label>
+<label class="option"><input checked="" name="q35" type="radio" value="대부분 일정하지만 가끔 예외가 있음"/> 대부분 일정하지만 가끔 예외가 있음</label>
+<label class="option"><input checked="" name="q35" type="radio" value="유동적이어서 계획이 자주 바뀐다"/> 유동적이어서 계획이 자주 바뀐다</label>
+<label class="option"><input checked="" name="q35" type="radio" value="매일 다르고 예측하기 어렵다"/> 매일 다르고 예측하기 어렵다</label>
+</div>
+<div class="question">
+<h3>36. 희망하는 견종은 무엇인가요?</h3>
+<input name="q36" style="width: 100%; padding: 8px; margin-top: 8px;" type="text"/>
+</div>
+<div class="question">
+<h3>37. 선호하는 털 색은 무엇인가요??</h3>
+<label class="option"><input checked="" name="q37" type="radio" value="white"/> 흰색</label>
+<label class="option"><input checked="" name="q37" type="radio" value="black"/> 검정색</label>
+<label class="option"><input checked="" name="q37" type="radio" value="brown"/> 갈색</label>
+<label class="option"><input checked="" name="q37" type="radio" value="gray"/> 회색</label>
+<label class="option"><input checked="" name="q37" type="radio" value="all_ok"/> 상관없음</label>
+</div>
+<div class="question">
+<h3>38. 선호하는 견종 크기는?</h3>
+<label class="option"><input checked="" name="q38" type="radio" value="miniminidog"/> 초소형견</label>
+<label class="option"><input checked="" name="q38" type="radio" value="minidog"/> 소형견</label>
+<label class="option"><input checked="" name="q38" type="radio" value="middledog"/> 중형견</label>
+<label class="option"><input checked="" name="q38" type="radio" value="bigdog"/> 대형견</label>
+<label class="option"><input checked="" name="q38" type="radio" value="bigbigdog"/> 초대형견</label>
+</div>
+<div class="question">
+<h3>39. 선호하는 눈 색깔은?</h3>
+<label class="option"><input checked="" name="q39" type="radio" value="black"/> 검정색</label>
+<label class="option"><input checked="" name="q39" type="radio" value="brown"/> 갈색</label>
+<label class="option"><input checked="" name="q39" type="radio" value="blue"/> 파란색</label>
+<label class="option"><input checked="" name="q39" type="radio" value="all_ok"/> 상관없음</label>
+</div>
+<div class="question">
+<h3>40. 견종의 희망 수명은?</h3>
+<label class="option"><input checked="" name="q40" type="radio" value="under10"/> 10년 미만</label>
+<label class="option"><input checked="" name="q40" type="radio" value="10~13"/> 10년~13년</label>
+<label class="option"><input checked="" name="q40" type="radio" value="over13"/> 13년 이상</label></div>
+<div class="question">
+<h3>41. 어떤 성격의 견종을 원하시나요?</h3>
+<label class="option"><input checked="" name="q41" type="radio" value="energetic,good-natured,playful"/> 활발하고 에너지 넘치는</label>
+<label class="option"><input checked="" name="q41" type="radio" value="calm,good-natured,gentle"/> 조용하고 얌전한</label>
+</div>
+<div class="question">
+<h3>42. 당신의 체형은?</h3>
+<label class="option"><input checked="" name="q42" type="radio" value="thin"/> 마른 체형</label>
+<label class="option"><input checked="" name="q42" type="radio" value="average"/> 평균 체형</label>
+<label class="option"><input checked="" name="q42" type="radio" value="obess"/> 비만 체형</label>
+</div>
+<div class="question">
+<h3>43. 당신의 머리색은?</h3>
+<label class="option"><input checked="" name="q43" type="radio" value="yellow"/> 금발</label>
+<label class="option"><input checked="" name="q43" type="radio" value="brown"/> 갈색</label>
+<label class="option"><input checked="" name="q43" type="radio" value="black"/> 흑발</label>
+<label class="option"><input checked="" name="q43" type="radio" value="red"/> 붉은 계열</label>
+<label class="option"><input checked="" name="q43" type="radio" value="all_ok"/> 문항에 없음</label>
+</div>
+<div class="question">
+<h3>44. 당신의 눈동자 색은?</h3>
+<label class="option"><input checked="" name="q44" type="radio" value="brown"/> 갈색</label>
+<label class="option"><input checked="" name="q44" type="radio" value="black"/> 검정</label>
+<label class="option"><input checked="" name="q44" type="radio" value="green"/> 녹색</label><label class="option"><input checked="" name="q44" type="radio" value="thin"/> 마른 체형</label>
+<label class="option"><input checked="" name="q44" type="radio" value="blue"/> 파란색</label>
+<label class="option"><input checked="" name="q44" type="radio" value="gray"/> 회색</label><label class="option"><input checked="" name="q44" type="radio" value="thin"/> 마른 체형</label>
+<label class="option"><input checked="" name="q44" type="radio" value="all_ok"/> 문항에 없음</label>
+</div>
+<div class="question">
+<h3>45. 당신의 평소 성격은?</h3>
+<label class="option"><input checked="" name="q45" type="radio" value="energetic"/> 주로 활동적이다.</label>
+<label class="option"><input checked="" name="q45" type="radio" value="calm"/> 주로 내향적이다.</label>
+</div>
+
+<button type="submit">제출하기</button>
+
+{% if warning %}
+  <p style="color: red; text-align: center;">{{ warning }}</p>
+{% endif %}
+
+    </form>
+</div>
+</body>
+</html>
