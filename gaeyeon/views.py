@@ -11,101 +11,199 @@ from django.views.decorators.csrf import csrf_exempt
 from graduation_proj import settings
 
 # 모델 로딩 (앱 시작 시 1회만)
-MODEL_PATH = os.path.join(settings.BASE_DIR, 'gaeyeon', 'dog_breed_classifier.h5')
+MODEL_PATH = os.path.join(settings.BASE_DIR, 'gaeyeon', 'dog_breed_classifier.keras')
 model = load_model(MODEL_PATH)
 
-# 클래스 이름들 (예: ['beagle', 'chihuahua', 'poodle', ...])
-CLASS_NAMES = [
-    'bostonbull', 'dingo', 'pekinese', 'bluetick', 'goldenretriever',
-    'bedlingtonterrier', 'borzoi', 'basenji', 'scottishdeerhound',
-    'shetlandsheepdog', 'walkerhound', 'maltesedog', 'norfolkterrier',
-    'africanhuntingdog', 'wire-hairedfoxterrier', 'redbone', 'lakelandterrier',
-    'boxer', 'doberman', 'otterhound', 'standardschnauzer', 'irishwaterspaniel',
-    'black-and-tancoonhound', 'cairn', 'affenpinscher', 'labradorretriever',
-    'ibizanhound', 'englishsetter', 'weimaraner', 'giantschnauzer', 'groenendael',
-    'dhole', 'toypoodle', 'borderterrier', 'tibetanterrier', 'norwegianelkhound',
-    'shih-tzu', 'irishterrier', 'kuvasz', 'germanshepherd',
-    'greaterswissmountaindog', 'basset', 'australianterrier', 'schipperke',
-    'rhodesianridgeback', 'irishsetter', 'appenzeller', 'bloodhound', 'samoyed',
-    'miniatureschnauzer', 'brittanyspaniel', 'kelpie', 'papillon', 'bordercollie',
-    'entlebucher', 'collie', 'malamute', 'welshspringerspaniel', 'chihuahua',
-    'saluki', 'pug', 'malinois', 'komondor', 'airedale', 'leonberg',
-    'mexicanhairless', 'bullmastiff', 'bernesemountaindog',
-    'americanstaffordshireterrier', 'lhasa', 'cardigan', 'italiangreyhound',
-    'clumber', 'scotchterrier', 'afghanhound', 'oldenglishsheepdog',
-    'saintbernard', 'miniaturepinscher', 'eskimodog', 'irishwolfhound',
-    'brabancongriffon', 'toyterrier', 'chow', 'flat-coatedretriever',
-    'norwichterrier', 'soft-coatedwheatenterrier', 'staffordshirebullterrier',
-    'englishfoxhound', 'gordonsetter', 'siberianhusky', 'newfoundland', 'briard',
-    'chesapeakebayretriever', 'dandiedinmont', 'greatpyrenees', 'beagle',
-    'vizsla', 'westhighlandwhiteterrier', 'kerryblueterrier', 'whippet',
-    'sealyhamterrier', 'standardpoodle', 'keeshond', 'japanesespaniel',
-    'miniaturepoodle', 'pomeranian', 'curly-coatedretriever', 'yorkshireterrier',
-    'pembroke', 'greatdane', 'blenheimspaniel', 'silkyterrier', 'sussexspaniel',
-    'germanshort-hairedpointer', 'frenchbulldog', 'bouvierdesflandres',
-    'tibetanmastiff', 'englishspringer', 'cockerspaniel', 'rottweiler'
-]
-
-
-def predict_breed(img_path):
-    img = Image.open(img_path).resize((224, 224))
-    img_array = image.img_to_array(img) / 255.0
-    img_array = np.expand_dims(img_array, axis=0)
-    pred = model.predict(img_array)
-    print(pred)
-    return CLASS_NAMES[np.argmax(pred)]
-
-@csrf_exempt
-def upload_view(request):
-    if request.method == 'POST':
-        print(request)
-        print(request.FILES)
-        if 'fileInput' in request.FILES:
-            file = request.FILES['fileInput']
-            file_path = default_storage.save('uploads/' + file.name, file)
-            full_path = os.path.join(default_storage.location, file_path)
-            print(full_path)
-
-            breed = predict_breed(full_path)
-            print(breed)
-            request.session['breed'] = breed
-            return JsonResponse({'success': True, 'redirect': '/survey/'})
-
-        elif 'breed_text' in request.POST:
-            input_breed = request.POST['breed_text']
-            # 전처리: 소문자 + 공백/스코어 제거
-            cleaned = input_breed.lower().replace(" ", "").replace("-", "").replace("_", "")
-            request.session['breed'] = cleaned
-            return JsonResponse({'success': True, 'redirect': '/survey/'})
-        return JsonResponse({'success': False, 'error': '입력 누락: image나 breed_text가 필요합니다.'})
-
-
-    return render(request, 'upload.html')
-
+CLASS_NAMES = ['chihuahua', 'newfoundland', 'chesapeakebayretriever', 'saluki', 'pomeranian',
+               'germanshepherd', 'samoyed', 'boxer', 'australianterrier', 'kuvasz',
+               'welshspringerspaniel', 'hound', 'yorkshireterrier', 'greatpyrenees', 'borzoi',
+               'staffordshirebullterrier', 'cockerspaniel', 'standardschnauzer', 'papillon', 'poodle',
+               'retriever', 'miniaturepinscher', 'borderterrier', 'irishsetter', 'saintbernard',
+               'oldenglishsheepdog', 'basenji', 'irishterrier', 'englishsetter', 'kerryblueterrier',
+               'greatdane', 'bloodhound', 'rottweiler', 'beagle', 'scottishdeerhound',
+               'affenpinscher', 'pug', 'westhighlandwhiteterrier', 'miniatureschnauzer', 'keeshond',
+               'siberianhusky', 'giantschnauzer', 'irishwaterspaniel', 'frenchbulldog', 'gordonsetter',
+               'vizsla', 'bordercollie', 'weimaraner', 'rhodesianridgeback', 'shihtzu',
+               'irishwolfhound'
+               ]
 
 csv_path = os.path.join(settings.BASE_DIR, 'gaeyeon', 'dog_breeds_info.csv')
 df = pd.read_csv(csv_path)
 
-def survey_view(request):
-    breed = request.session.get('breed', '견종 정보 없음')
-    if request.method == 'POST':
-        # 질문 응답 수집
-        q = {f'q{i}': request.POST.get(f'q{i}') for i in [11,12,13,14,15,16,17,19,20,21,23,24,25,26,27,28,31,32,33,34,35,37,38,39,40,43,44,45]}
 
-        # 견종 데이터 가져오기
-        breed_info = df[df['Breed'] == str(breed)].iloc[0]
-        height = breed_info['Height_avg']
-        longevity = breed_info['Longevity_avg']
+@csrf_exempt
+def upload_view(request):
+    if request.method == 'POST':
+        try:
+            # 1. 텍스트 입력 처리
+            if 'breed_text' in request.POST and request.POST['breed_text']:
+                breed_text = request.POST['breed_text'].strip().lower()
+
+                # DB에 견종 정보가 있는지 확인
+                if breed_text not in df['Breed'].str.lower().values:
+                    return JsonResponse({
+                        'success': False,
+                        'message': f"'{breed_text}' 견종의 정보는 아직 준비되지 않았습니다."
+                    })
+
+                request.session['predicted_breed'] = breed_text
+                return JsonResponse({'success': True, 'redirect': '/survey/'})
+
+            # 2. 이미지 입력 처리
+            elif 'fileInput' in request.FILES:
+                image_file = request.FILES['fileInput']
+
+                # 모델이 384x384 크기를 기대하므로 (384, 384)로 수정
+                img = Image.open(image_file)
+                img = img.resize((384, 384))
+                img_array = image.img_to_array(img)
+
+                img_array = np.expand_dims(img_array, axis=0)
+                img_array /= 255.
+
+                prediction = model.predict(img_array)
+                confidence = np.max(prediction) * 100
+                predicted_breed = CLASS_NAMES[np.argmax(prediction)].lower()
+
+                # 예측 실패 (확률 30% 미만)
+                if confidence < 30.5:
+                    return JsonResponse({
+                        'success': False,
+                        'message': f"견종을 확신할 수 없습니다. (예측 확률: {confidence:.2f}%)",
+                        'confidence': f"{confidence:.2f}%"
+                    })
+
+                # DB에 견종 정보가 있는지 확인
+                if predicted_breed not in df['Breed'].str.lower().values:
+                    return JsonResponse({
+                        'success': False,
+                        'message': f"'{predicted_breed}' 견종의 정보는 아직 준비되지 않았습니다."
+                    })
+
+                request.session['predicted_breed'] = predicted_breed
+                return JsonResponse({
+                    'success': True,
+                    'redirect': '/survey/',
+                    'breed': predicted_breed,
+                    'confidence': f"{confidence:.2f}%"
+                })
+
+            else:
+                return JsonResponse({
+                    'success': False,
+                    'message': '입력 누락: image나 breed_text가 필요합니다.'
+                }, status=400)
+
+        except Exception as e:
+            # 모든 종류의 서버 내부 에러를 캐치
+            return JsonResponse({'success': False, 'message': f'서버 내부 오류: {str(e)}'}, status=500)
+
+    return render(request, 'upload.html')
+
+
+def survey_view(request):
+    breed = request.session.get('predicted_breed')
+    if not breed:
+        return redirect('upload_view')
+
+    if request.method == 'POST':
+        # q2부터 수집하도록 range(2, 22)로 수정
+        q = {f'q{i}': request.POST.get(f'q{i}', '') for i in range(2, 22)}
+
+        # --- ### 1순위: 논리 오류(재설문) 검사 ### ---
+        # 불합격 조건을 검사하기 전에, 논리적 모순부터 검사합니다.
+        warning_conditions = [
+            q.get('q5') == '50만원 이상' and q.get('q6') != '600만원 이상',
+            q.get('q5') != '50만원 이상' and q.get('q6') == '600만원 이상',
+            q.get('q7') in ['20만원~25만원 미만', '25만원 이상'] and q.get('q8') not in ['240만원~260만원 미만', '260만원 이상'],
+            q.get('q7') not in ['20만원~25만원 미만', '25만원 이상'] and q.get('q8') in ['240만원~260만원 미만', '260만원 이상'],
+            q.get('q2') == '1명' and q.get('q10') in ['2명', '3명 이상'],
+            q.get('q2') == '2명' and q.get('q10') == '3명 이상',
+            q.get('q2') == '1명' and q.get('q11') in ['2명', '3명 이상'],
+            q.get('q2') == '2명' and q.get('q11') == '3명 이상'
+        ]
+
+        if any(warning_conditions):
+            if request.session.get('survey_warning_once'):
+                # 논리 오류로 2번째 걸리면 '불합격' 처리
+                return render(request, 'fail.html', {'fail_reason': '설문 문항 내 논리적 오류'})
+            else:
+                # 1번째 걸리면 '재설문' 요청
+                request.session['survey_warning_once'] = True
+                # breed 값을 템플릿으로 다시 전달해야 합니다.
+                return render(request, 'survey.html', {'warning': '설문을 진실 되게 작성 하세요.', 'breed': breed})
+        # --- ###################################### ---
+
+        # --- 2순위: 불합격 조건 검사 (논리 오류 통과 시) ---
+        breed_info_df = df[df['Breed'].str.lower() == breed.lower()]
+        if breed_info_df.empty:
+            return render(request, 'fail.html', {'fail_reason': '해당 견종의 정보를 찾을 수 없습니다.'})
+        breed_info = breed_info_df.iloc[0]
+
+        # 1. Height (in) 처리 (예: "21-24" -> 22.5)
+        height_str = str(breed_info['Height (in)'])
+        if '-' in height_str:
+            parts = height_str.split('-')
+            height = (int(parts[0]) + int(parts[1])) / 2
+        else:
+            height = int(height_str)
+
+        # 2. Longevity (yrs) 처리 (예: "10-12" -> 11)
+        longevity_str = str(breed_info['Longevity (yrs)'])
+        if '-' in longevity_str:
+            parts = longevity_str.split('-')
+            longevity = (int(parts[0]) + int(parts[1])) / 2
+        else:
+            longevity = int(longevity_str)
+
+        # 3. 나머지 정보 로드
         fur_color = breed_info['Fur Color']
         eye_color = breed_info['Color of Eyes']
-        traits = breed_info['Character Traits']
+        traits_str = breed_info['Character Traits']
 
-        # 실패 플래그 정의
-        economic_weak = q['q11'] == '아니요' or q['q13'] in ['5만원 미만', '5만~ 10만원 미만'] or q['q14'] in ['5만원 미만', '감당하기 어렵다'] or q['q19'] == '감당 어렵다'
-        environment_weak = q['q20'] == '아니요' or q['q23'] == '불가능하다' or q['q25'] == '없다'
-        irresponsible = q['q26'] in ['거의 함께할 수 없다', '1시간 내외'] or q['q27'] in ['거의 함께할 수 없다', '1시간 내외'] or q['q28'] == '거의 하지 않을 것 같다' or q['q32'] == '어려울 것 같다' or q['q34'] == '바로 쉬어야 함'
+        # (불합격 조건 계산)
+        dog_actual_traits = [trait.strip() for trait in traits_str.split(',')]
+        extrovert_keywords = ['active', 'affectionate', 'athletic', 'brave', 'confident', 'curious', 'energetic',
+                              'friendly', 'playful', 'social']
+        introvert_keywords = ['calm', 'charming']
 
-        # 견종 크기 불일치
+        is_extrovert = any(trait in extrovert_keywords for trait in dog_actual_traits)
+        is_introvert = any(trait in introvert_keywords for trait in dog_actual_traits)
+
+        dog_tendency = []
+        if is_extrovert:
+            dog_tendency.append('extrovert')
+        if is_introvert:
+            dog_tendency.append('introvert')
+        if not dog_tendency:
+            dog_tendency = ['extrovert', 'introvert']
+
+        fail_traits = q.get('q21') not in dog_tendency
+
+        economic_weak = (q.get('q5') != '50만원 이상' or q.get('q6') != '600만원 이상'
+                         or q.get('q7') not in ['20만원~25만원 미만', '25만원 이상']
+                         or q.get('q8') not in ['240만원~260만원 미만', '260만원 이상'])
+
+        environment_weak = (q.get('q4') == '30분 이상' or q.get('q9') != '해당X'
+                            or q.get('q10') != '해당X' or q.get('q11') != '해당X'
+                            or q.get('q12') == '아니오')
+
+        minidog_walk = (q.get('q19') in ['miniminidog', 'minidog']
+                        and q.get('q13') == '30분~50분 미만'
+                        and q.get('q14') == '1km~3km 미만')
+        middledog_walk = (q.get('q19') == 'middledog'
+                          and q.get('q13') == '약 1시간'
+                          and q.get('q14') == '3km~5km 미만')
+        bigdog_walk = (q.get('q19') in ['bigdog', 'bigbigdog']
+                       and q.get('q13') == '1시간 이상'
+                       and q.get('q14') == '5km~8km 미만')
+
+        fail_q15 = (q.get('q15') != '있음')
+        fail_q16 = q.get('q16') in ['복수의 반려견', '대가족 생활']
+
+        # 'minido_walk' 오타 수정 -> 'minidog_walk'
+        irresponsible = fail_q15 or fail_q16 or not (minidog_walk or middledog_walk or bigdog_walk)
+
         size_map = {
             'miniminidog': height > 11,
             'minidog': not (12 <= height <= 15),
@@ -113,27 +211,22 @@ def survey_view(request):
             'bigdog': not (22 <= height <= 27),
             'bigbigdog': height < 28
         }
-        fail_q38 = size_map.get(q['q38'], False)
+        fail_q19 = size_map.get(q.get('q19'), False)
 
-        # 수명 불일치
-        if q['q40'] == 'under10':
-            fail_q40 = longevity >= 10
-        elif q['q40'] == '10~13':
-            fail_q40 = not (10 <= longevity <= 13)
-        elif q['q40'] == 'over13':
-            fail_q40 = longevity <= 13
-        else:
-            fail_q40 = False
+        fail_q20 = False
+        if q.get('q20') == '10년 미만':
+            fail_q20 = longevity >= 10
+        elif q.get('q20') == '10년~13년 미만':
+            fail_q20 = not (10 <= longevity < 13)
+        elif q.get('q20') == '13년 이상':
+            fail_q20 = longevity < 13
 
-        # 색상 및 특성 불일치
-        fail_q39 = q['q39'] not in eye_color
-        fail_q43 = q['q43'] != 'all_ok' and q['q43'] not in fur_color
-        fail_q44 = q['q44'] not in eye_color
-        fail_traits = not any(t in traits for t in q['q45'].split(','))
-        fail_fur_match = not any(t in fur_color for t in q['q37'].split(','))
-        trait_unmatch = fail_q38 or fail_q39 or fail_q40 or fail_traits or fail_q43 or fail_q44 or fail_fur_match
+        fail_q17 = q.get('q17') not in eye_color
+        fail_q18 = q.get('q18') not in fur_color
 
-        # 복합 실패 조건 우선 적용
+        trait_unmatch = fail_q17 or fail_q18 or fail_q19 or fail_q20 or fail_traits
+
+        # (불합격 조건 검사)
         if economic_weak and environment_weak and irresponsible and trait_unmatch:
             return render(request, 'fail.html', {'fail_reason': '경제적 미비, 환경적 미비, 책임감 부족, 견종과 성향 불일치'})
         if economic_weak and environment_weak and irresponsible:
@@ -167,31 +260,9 @@ def survey_view(request):
         if trait_unmatch:
             return render(request, 'fail.html', {'fail_reason': '견종과 성향 불일치'})
 
-        # 논리 오류 1회 경고
-        warning_conditions = [
-            q['q12'] == '200만원 미만' and q['q13'] == '20만원 이상',
-            q['q13'] == '20만원 이상' and q['q16'] in ['5만원 미만', '5만 ~ 10만원 미만'],
-            q['q11'] == '예' and q['q14'] == '5만원 미만',
-            q['q15'] == '대출 또는 외부 도움을 받았다' and q['q19'] == '감당 어렵다',
-            q['q13'] in ['5만원 미만', '5만 ~ 10만원 미만', '10만 ~ 20만원 미만'] and q['q14'] == '50만 원 이상',
-            q['q20'] == '예' and q['q23'] in ['불가능하다', '잘 모르겠다'],
-            q['q20'] == '예' and q['q25'] == '없다',
-            q['q20'] == '예' and q['q24'] == '1년 내 계획이 있다',
-            q['q17'] == '아직 생각 안함' and q['q21'] == '6개월 이상',
-            q['q26'] in ['거의 함께할 수 없다', '1시간 내외'] and q['q28'] in ['거의 하지 않을 것 같다', '주 1~4회'],
-            q['q27'] in ['거의 함께할 수 없다', '1시간 내외'] and q['q28'] == '거의 매일 산책할 수 있다',
-            q['q26'] == '거의 함께할 수 없다' and q['q31'] == '5시간 이상',
-            q['q28'] in ['주 1~4회', '거의 매일 산책할 수 있다'] and q['q34'] == '바로 쉬어야 함',
-            q['q28'] in ['주 1~4회', '거의 매일 산책할 수 있다'] and q['q35'] in ['유동적이어서 계획이 자주 바뀐다', '매일 다르고 예측하기 어렵다'],
-            q['q32'] == '어려울 것 같다' and q['q33'] in ['놀이/훈련 상호작용', '건강관리 철저']
-        ]
-        if any(warning_conditions):
-            if request.session.get('survey_warning_once'):
-                return render(request, 'fail.html', {'fail_reason': '설문 문항 내 논리적 오류'})
-            else:
-                request.session['survey_warning_once'] = True
-                return render(request, 'survey.html', {'warning': '설문을 진실 되게 작성 하세요.'})
-
+        # --- 3순위: 최종 통과 ---
+        # 모든 검사(논리, 불합격)를 통과한 경우
         return render(request, 'pass.html')
 
+    # GET 요청 시
     return render(request, 'survey.html', {'breed': breed})

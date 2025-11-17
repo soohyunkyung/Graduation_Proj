@@ -5,40 +5,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>개연_시작 페이지</title>
     <style>
+        /* (스타일은 기존과 동일) */
         body{
-             background-color: #fce4ec; /* 연분홍 배경 */
+             background-color: #fce4ec; 
         }
         body div{
             font-family: Arial, sans-serif;
             max-width: 900px;
             margin: 50px auto;
             padding: 20px;
-            background-color: #fce4ec; /* 연분홍 배경 */
+            background-color: #fce4ec; 
             border: 1px solid #f8bbd0;
             border-radius: 8px;
             box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.1);
         }
-
-        h1 {
+        h1, h2 {
             text-align: center;
-            color: #d81b60; /* 진한 핑크 */
+            color: #d81b60; 
         }
-
-        h2 {
-            text-align: center;
-            color: #d81b60; /* 진한 핑크 */
-        }
-
         hr{
-            color: #d81b60; /* 진한 핑크 */
+            color: #d81b60; 
         }
-
         .input-section {
             margin-bottom: 15px;
         }
         label {
             font-weight: bold;
-            color: #880e4f; /* 진한 자주 */
+            color: #880e4f; 
         }
         input[type="text"], input[type="file"] {
             width: 100%;
@@ -46,13 +39,14 @@
             margin-top: 5px;
             border: 1px solid #f8bbd0;
             border-radius: 4px;
-            background-color: #fff3e0; /* 베이지 톤 */
+            background-color: #fff3e0; 
+            box-sizing: border-box; 
         }
         button {
             width: 100%;
             padding: 10px;
             margin-top: 10px;
-            background-color: #f48fb1; /* 연한 핑크 */
+            background-color: #f48fb1; 
             color: white;
             border: none;
             border-radius: 4px;
@@ -60,7 +54,7 @@
             font-weight: bold;
         }
         button:hover {
-            background-color: #d81b60; /* 진한 핑크 */
+            background-color: #d81b60; 
         }
         .result {
             margin-top: 15px;
@@ -69,93 +63,84 @@
             color: #880e4f;
         }
         .breed-grid {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 6px;
-    margin-top: 10px;
-}
-
-.breed-grid button {
-    padding: 6px 8px;
-    font-size: 12px;
-    background-color: #fce4ec;
-    border: 1px solid #f8bbd0;
-    border-radius: 4px;
-    cursor: pointer;
-    color: #880e4f;
-    white-space: nowrap;
-}
-
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 6px;
+            margin-top: 10px;
+        }
+        .breed-grid button {
+            padding: 6px 8px;
+            font-size: 12px;
+            background-color: #fce4ec;
+            border: 1px solid #f8bbd0;
+            border-radius: 4px;
+            cursor: pointer;
+            color: #880e4f;
+            white-space: nowrap;
+        }
     </style>
 </head>
 <body>
     <h1>개연</h1>
     <div>
     <h2>키우고 싶은 견종은?</h2>
-    <form id="infoForm" method = "post" enctype="multipart/form-data">
-        <div class="input-section">
+    
+    <form id="infoForm">
+        {% csrf_token %} <div class="input-section">
             <label for="fileInput">견종 이미지 업로드:</label>
             <input type="file" id="fileInput" name="fileInput" accept="image/*">
         </div>
         <div class="input-section">
             <label for="textInput">견종 입력:</label>
-            <input type="text" id="textInput" name="textInput" placeholder="견종을 입력하세요">
+            <input type="text" id="textInput" name="breed_text" placeholder="견종을 입력하세요">
         </div>
         <div id="breedList" class="breed-grid"></div>
 
         <button type="button" onclick="submitInfo()">다음 페이지</button>
     </form>
+
     <p id="result" class="result"></p>
     </div>
-    <script>
-        function submitInfo() {
-            const formData = new FormData(document.getElementById('infoForm'));
 
-            fetch('http://127.0.0.1:8000/upload/', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    window.location.href = data.redirect;
-                } else {
-                    alert("에러: " + data.error);
-                }
-            })
-            .catch(error => console.error('Error:', error));
-        }
-    </script>
-<script>
+    <script>
+    function submitInfo() {
+        const form = document.getElementById('infoForm');
+        const formData = new FormData(form);
+        const resultP = document.getElementById('result');
+        resultP.textContent = '제출 중...'; // 로딩 표시
+
+        fetch('/', {
+            method: 'POST',
+            body: formData,
+            headers: {
+                // CSRF 토큰을 폼에서 가져와 헤더에 추가
+                'X-CSRFToken': formData.get('csrfmiddlewaretoken') 
+            }
+        })
+        .then(response => {
+            // response.json()을 먼저 호출
+            return response.json();
+        })
+        .then(data => {
+            if (data.success) {
+                // --- 바로 이 부분입니다! ---
+                // 성공(data.success) 시, data.redirect에 담긴 주소(/survey/)로 이동합니다.
+                window.location.href = data.redirect;
+            } else {
+                // views.py가 보낸 에러 메시지를 표시
+                resultP.textContent = '오류: ' + (data.message || '알 수 없는 오류');
+            }
+        })
+        .catch(error => {
+            // 네트워크 에러 또는 JSON 파싱 에러
+            console.error('Error:', error);
+            resultP.textContent = '전송 오류: ' + error.message;
+        });
+    }
+
+    // (견종 버튼 생성 스크립트는 기존과 동일)
     const breeds = [
-        'bostonbull', 'dingo', 'pekinese', 'bluetick', 'goldenretriever',
-        'bedlingtonterrier', 'borzoi', 'basenji', 'scottishdeerhound',
-        'shetlandsheepdog', 'walkerhound', 'maltesedog', 'norfolkterrier',
-        'africanhuntingdog', 'wire-hairedfoxterrier', 'redbone', 'lakelandterrier',
-        'boxer', 'doberman', 'otterhound', 'standardschnauzer', 'irishwaterspaniel',
-        'black-and-tancoonhound', 'cairn', 'affenpinscher', 'labradorretriever',
-        'ibizanhound', 'englishsetter', 'weimaraner', 'giantschnauzer', 'groenendael',
-        'dhole', 'toypoodle', 'borderterrier', 'tibetanterrier', 'norwegianelkhound',
-        'shih-tzu', 'irishterrier', 'kuvasz', 'germanshepherd',
-        'greaterswissmountaindog', 'basset', 'australianterrier', 'schipperke',
-        'rhodesianridgeback', 'irishsetter', 'appenzeller', 'bloodhound', 'samoyed',
-        'miniatureschnauzer', 'brittanyspaniel', 'kelpie', 'papillon', 'bordercollie',
-        'entlebucher', 'collie', 'malamute', 'welshspringerspaniel', 'chihuahua',
-        'saluki', 'pug', 'malinois', 'komondor', 'airedale', 'leonberg',
-        'mexicanhairless', 'bullmastiff', 'bernesemountaindog',
-        'americanstaffordshireterrier', 'lhasa', 'cardigan', 'italiangreyhound',
-        'clumber', 'scotchterrier', 'afghanhound', 'oldenglishsheepdog',
-        'saintbernard', 'miniaturepinscher', 'eskimodog', 'irishwolfhound',
-        'brabancongriffon', 'toyterrier', 'chow', 'flat-coatedretriever',
-        'norwichterrier', 'soft-coatedwheatenterrier', 'staffordshirebullterrier',
-        'englishfoxhound', 'gordonsetter', 'siberianhusky', 'newfoundland', 'briard',
-        'chesapeakebayretriever', 'dandiedinmont', 'greatpyrenees', 'beagle',
-        'vizsla', 'westhighlandwhiteterrier', 'kerryblueterrier', 'whippet',
-        'sealyhamterrier', 'standardpoodle', 'keeshond', 'japanesespaniel',
-        'miniaturepoodle', 'pomeranian', 'curly-coatedretriever', 'yorkshireterrier',
-        'pembroke', 'greatdane', 'blenheimspaniel', 'silkyterrier', 'sussexspaniel',
-        'germanshort-hairedpointer', 'frenchbulldog', 'bouvierdesflandres',
-        'tibetanmastiff', 'englishspringer', 'cockerspaniel', 'rottweiler'
+        'affenpinscher', 'americanbulldog', 'australiancattledog', 'australianshepherd', 'australianterrier', 'basenji', 'beagle', 'bloodhound', 'bordercollie', 'borderterrier', 'borzoi', 'boxer', 'bulldog', 'bullterrier', 'chesapeakebayretriever', 'chihuahua', 'cockerspaniel', 'dachshund', 'dobermanpinscher', 'englishsetter', 'flatcoatedretriever', 'frenchbulldog', 'germanshepherd', 'giantschnauzer', 'goldenretriever', 'gordonsetter', 'greatdane', 'greatpyrenees', 'greyhound', 'irishsetter', 'irishterrier', 'irishwaterspaniel', 'irishwolfhound', 'italiangreyhound', 'jackrussellterrier', 'keeshond', 'kerryblueterrier', 'kuvasz', 'labradorretriever', 'maltese', 'mastiff', 'miniaturepinscher', 'miniaturepoodle', 'miniatureschnauzer', 'newfoundland', 'oldenglishsheepdog', 'papillon', 'pointer', 'pomeranian', 'poodle', 'pug', 'rhodesianridgeback', 'rottweiler', 'saintbernard', 'saluki', 'samoyed', 'scottishdeerhound', 'shetlandsheepdog', 'shihtzu', 'siberianhusky', 'staffordshirebullterrier', 'standardpoodle', 'standardschnauzer', 'toypoodle', 'vizsla', 'weimarener', 'welshspringerspaniel', 'westhighlandwhiteterrier', 'whippet', 'yorkshireterrier'
     ];
 
     window.addEventListener("DOMContentLoaded", function () {
