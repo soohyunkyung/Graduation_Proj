@@ -1,2 +1,2 @@
 Hongik Univ. Graudation Project
-www.hongikgraduprojgaeyeon.com
+www.gaeyeonhongikgraduproj.com
